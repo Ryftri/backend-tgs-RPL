@@ -2,6 +2,8 @@ import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
 import Users from "./UserModel.js";
 import Products from "./ProductModel.js";
+import { customAlphabet } from 'nanoid';
+const nanoid = customAlphabet('1234567890', 9);
 
 const { DataTypes } = Sequelize;
 
@@ -9,6 +11,14 @@ const OutGoods = db.define("out_goods", {
   uuid:{
     type: DataTypes.STRING,
     defaultValue: DataTypes.UUIDV4,
+    allowNull: false,
+    validate:{
+        notEmpty: true
+    }
+  },
+  kode_brg_keluar:{
+    type: DataTypes.STRING,
+    defaultValue: `BKR${nanoid()}`,
     allowNull: false,
     validate:{
         notEmpty: true

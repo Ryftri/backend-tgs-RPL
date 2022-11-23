@@ -8,7 +8,7 @@ export const getOutGoods = async (req, res) =>{
         let response;
         if(req.role === "admin"){
             response = await OutGoods.findAll({
-                attributes:['uuid', 'id', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_keluar', 'quantity', 'createdAt', 'updatedAt'],
                 include:[
                     {
                         model: User, 
@@ -22,7 +22,7 @@ export const getOutGoods = async (req, res) =>{
             });
         }else{
             response = await OutGoods.findAll({
-                attributes:['uuid', 'id', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_keluar', 'quantity', 'createdAt', 'updatedAt'],
                 where:{
                     userId: req.userId
                 },
@@ -55,7 +55,7 @@ export const getOutGoodsById = async(req, res) =>{
         let response;
         if(req.role === "admin"){
             response = await OutGoods.findOne({
-                attributes:['uuid', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_keluar', 'quantity', 'createdAt', 'updatedAt'],
                 where:{
                     id: OutGoods.id
                 },
@@ -72,7 +72,7 @@ export const getOutGoodsById = async(req, res) =>{
             });
         }else{
             response = await OutGoods.findOne({
-                attributes:['uuid', 'id', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_keluar', 'quantity', 'createdAt', 'updatedAt'],
                 where:{
                     [Op.and]:[{id: OutGoods.id}, {userId: req.userId}]
                 },

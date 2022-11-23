@@ -8,7 +8,7 @@ export const getIncomings = async (req, res) =>{
         let response;
         if(req.role === "admin"){
             response = await IncomingGoods.findAll({
-                attributes:['uuid', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_masuk', 'quantity', 'createdAt', 'updatedAt'],
                 include:[
                     {
                         model: User, 
@@ -22,7 +22,7 @@ export const getIncomings = async (req, res) =>{
             });
         }else{
             response = await IncomingGoods.findAll({
-                attributes:['uuid', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_masuk', 'quantity', 'createdAt', 'updatedAt'],
                 where:{
                     userId: req.userId
                 },
@@ -55,7 +55,7 @@ export const getIncomingById = async(req, res) =>{
         let response;
         if(req.role === "admin"){
             response = await IncomingGoods.findOne({
-                attributes:['uuid', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_masuk', 'quantity', 'createdAt', 'updatedAt'],
                 where:{
                     id: incomingGoods.id
                 },
@@ -72,7 +72,7 @@ export const getIncomingById = async(req, res) =>{
             });
         }else{
             response = await IncomingGoods.findOne({
-                attributes:['uuid', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_masuk', 'quantity', 'createdAt', 'updatedAt'],
                 where:{
                     [Op.and]:[{id: incomingGoods.id}, {userId: req.userId}]
                 },
