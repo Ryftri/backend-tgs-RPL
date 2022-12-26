@@ -2,6 +2,9 @@ import OutGoods from "../models/OutGoodsModels.js";
 import Products from "../models/ProductModel.js";
 import User from "../models/UserModel.js";
 import {Op} from "sequelize";
+import { customAlphabet } from 'nanoid';
+
+const nanoid = customAlphabet('1234567890', 9);
 
 export const getOutGoods = async (req, res) =>{
     try {
@@ -113,7 +116,8 @@ export const createOutGoods = async(req, res) =>{
         await OutGoods.create({
             quantity: quantity,
             userId: req.userId,
-            productId: product.id
+            productId: product.id,
+            kode_brg_keluar: `BKR${nanoid()}`
         });
         await Products.update({quantity: amount},{
             where: {
