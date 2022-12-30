@@ -11,7 +11,7 @@ export const getIncomings = async (req, res) =>{
         let response;
         if(req.role === "admin"){
             response = await IncomingGoods.findAll({
-                attributes:['uuid', 'kode_brg_masuk', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_masuk', 'quantity', 'alamat','createdAt', 'updatedAt'],
                 include:[
                     {
                         model: User, 
@@ -25,7 +25,7 @@ export const getIncomings = async (req, res) =>{
             });
         }else{
             response = await IncomingGoods.findAll({
-                attributes:['uuid', 'kode_brg_masuk', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_masuk', 'quantity', 'alamat','createdAt', 'updatedAt'],
                 where:{
                     userId: req.userId
                 },
@@ -58,7 +58,7 @@ export const getIncomingById = async(req, res) =>{
         let response;
         if(req.role === "admin"){
             response = await IncomingGoods.findOne({
-                attributes:['uuid', 'kode_brg_masuk', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_masuk', 'quantity', 'alamat','createdAt', 'updatedAt'],
                 where:{
                     id: incomingGoods.id
                 },
@@ -75,7 +75,7 @@ export const getIncomingById = async(req, res) =>{
             });
         }else{
             response = await IncomingGoods.findOne({
-                attributes:['uuid', 'kode_brg_masuk', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_masuk', 'quantity', 'alamat','createdAt', 'updatedAt'],
                 where:{
                     [Op.and]:[{id: incomingGoods.id}, {userId: req.userId}]
                 },
@@ -100,6 +100,7 @@ export const getIncomingById = async(req, res) =>{
 export const createIncoming = async(req, res) =>{
     const quantity = req.body.quantites;
     const uuid = req.body.id;
+    const almt = req.body.alamat;
 
     const product = await Products.findOne({
         where: {
@@ -107,6 +108,7 @@ export const createIncoming = async(req, res) =>{
         }
     });
     if(!product) return res.status(404).json({msg: "Data produk tidak ditemukan!"})
+    if(almt === "" || almt === undefined) return res.status(400).json({msg: "Alamat Belum Diisi"})
 
     const amount = Number(quantity) + Number(product.quantity);
 
@@ -115,6 +117,7 @@ export const createIncoming = async(req, res) =>{
             quantity: quantity,
             userId: req.userId,
             productId: product.id,
+            alamat: almt,
             kode_brg_masuk: `BMK${nanoid()}`
         });
         await Products.update({quantity: amount},{

@@ -11,7 +11,7 @@ export const getOutGoods = async (req, res) =>{
         let response;
         if(req.role === "admin"){
             response = await OutGoods.findAll({
-                attributes:['uuid', 'kode_brg_keluar', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_keluar', 'quantity', 'alamat','createdAt', 'updatedAt'],
                 include:[
                     {
                         model: User, 
@@ -25,7 +25,7 @@ export const getOutGoods = async (req, res) =>{
             });
         }else{
             response = await OutGoods.findAll({
-                attributes:['uuid', 'kode_brg_keluar', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_keluar', 'quantity', 'alamat','createdAt', 'updatedAt'],
                 where:{
                     userId: req.userId
                 },
@@ -58,7 +58,7 @@ export const getOutGoodsById = async(req, res) =>{
         let response;
         if(req.role === "admin"){
             response = await OutGoods.findOne({
-                attributes:['uuid', 'kode_brg_keluar', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_keluar', 'quantity', 'alamat', 'createdAt', 'updatedAt'],
                 where:{
                     id: OutGoods.id
                 },
@@ -75,7 +75,7 @@ export const getOutGoodsById = async(req, res) =>{
             });
         }else{
             response = await OutGoods.findOne({
-                attributes:['uuid', 'kode_brg_keluar', 'quantity', 'createdAt', 'updatedAt'],
+                attributes:['uuid', 'kode_brg_keluar', 'quantity', 'alamat', 'createdAt', 'updatedAt'],
                 where:{
                     [Op.and]:[{id: OutGoods.id}, {userId: req.userId}]
                 },
@@ -100,12 +100,14 @@ export const getOutGoodsById = async(req, res) =>{
 export const createOutGoods = async(req, res) =>{
     const quantity = req.body.quantites;
     const uuid = req.body.id;
+    const almt = req.body.alamat;
 
     const product = await Products.findOne({
         where: {
             uuid: uuid
         }
     });
+    if(almt === "" || almt === undefined) return res.status(400).json({msg: "Alamat Belum Diisi"})
     if(!product) return res.status(404).json({msg: "Data produk tidak ditemukan!"})
     if(!Number(product.quantity)) return res.status(400).json({msg: "Jumlah barang : " + product.quantity})
     if(Number(product.quantity) < quantity) return res.status(400).json({msg: "Jumlah melebihi kapasitas : " + product.quantity + "<" + quantity})
@@ -117,6 +119,7 @@ export const createOutGoods = async(req, res) =>{
             quantity: quantity,
             userId: req.userId,
             productId: product.id,
+            alamat: almt,
             kode_brg_keluar: `BKR${nanoid()}`
         });
         await Products.update({quantity: amount},{

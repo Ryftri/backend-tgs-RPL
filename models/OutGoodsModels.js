@@ -28,6 +28,14 @@ const OutGoods = db.define("out_goods", {
           notEmpty: true
       }
   },
+  alamat:{
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate:{
+          notEmpty: true,
+          len: [3, 150]
+      }
+  },
   userId:{
       type: DataTypes.INTEGER,
       allowNull: false,
